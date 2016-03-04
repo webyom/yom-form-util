@@ -3,6 +3,7 @@ var $ = window.jQuery || window.$;
 
 var _msg = {};
 var _commonMsg = {};
+var _validators = {};
 
 function _getMsg(key, type) {
 	return _msg[key] && _msg[key][type] || _commonMsg[type];
@@ -38,27 +39,19 @@ function _formatMsg(msg, data) {
 	return msg;
 };
 
-var _validators = {
-	mandatory: require('./validator-mandatory'),
-	email: require('./validator-email'),
-	emailList: require('./validator-email-list'),
-	name: require('./validator-name'),
-	password: require('./validator-password'),
-	maxLength: require('./validator-max-length'),
-	maxByteLength: require('./validator-max-byte-length'),
-	url: require('./validator-url'),
-	set: require('./validator-set'),
-	number: require('./validator-number'),
-	integer: require('./validator-integer'),
-	numberRange: require('./validator-number-range'),
-	integerRange: require('./validator-integer-range'),
-	datetime: require('./validator-datetime'),
-	wordUpperCase: require('./validator-word-upper-case'),
-	domain: require('./validator-domain'),
-	domainList: require('./validator-domain-list')
-};
-
 var YomFormUtil = {};
+
+YomFormUtil.addValidator = function(name, validator) {
+	if(validator) {
+		_validators[name] = validator;
+	} else if(typeof name == 'object') {
+		for(var p in name) {
+			if(name.hasOwnProperty(p)) {
+				_validators[p] = name[p];
+			}
+		}
+	}
+};
 
 YomFormUtil.highLight = function(item, msg, type) {
 	var helper;
@@ -475,6 +468,26 @@ YomFormUtil.addText2Input = function (textarea, text, rangeData) {
 		rangeData.end = _rangeData.end;
 	}
 };
+
+YomFormUtil.addValidator({
+	mandatory: require('./validator-mandatory'),
+	email: require('./validator-email'),
+	emailList: require('./validator-email-list'),
+	name: require('./validator-name'),
+	password: require('./validator-password'),
+	maxLength: require('./validator-max-length'),
+	maxByteLength: require('./validator-max-byte-length'),
+	url: require('./validator-url'),
+	set: require('./validator-set'),
+	number: require('./validator-number'),
+	integer: require('./validator-integer'),
+	numberRange: require('./validator-number-range'),
+	integerRange: require('./validator-integer-range'),
+	datetime: require('./validator-datetime'),
+	wordUpperCase: require('./validator-word-upper-case'),
+	domain: require('./validator-domain'),
+	domainList: require('./validator-domain-list')
+});
 
 YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
 	mandatory: '必填项。',

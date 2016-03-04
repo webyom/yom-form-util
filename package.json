@@ -1,6 +1,6 @@
 {
   "name": "yom-form-util",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A form util.",
   "keywords": [
     "form util"
@@ -19,7 +19,6 @@
     "url": "https://github.com/webyom/yom-form-util/issues"
   },
   "license": "MIT",
-  "main": "lib/index.js",
   "typings": "src/yom-form-util.d.ts",
   "engines": {
     "node": ">= 0.8.0"
@@ -28,9 +27,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "coffee-script": "^1.7.1",
     "gulp": "^3.8.5",
-    "gulp-coffee": "^2.0.1",
     "gulp-amd-bundler": "^0.1.47"
   }
 }
