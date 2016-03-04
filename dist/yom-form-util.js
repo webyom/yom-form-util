@@ -237,10 +237,18 @@ YomFormUtil.getData = function(container, opt) {
 	return res;
 };
 
-YomFormUtil.focus = function(item) {
-	try {
-		$(item)[0].focus();
-	} catch(e) {}
+YomFormUtil.focus = function(item, select) {
+	item = $(item)[0];
+	var tagName = item.tagName;
+	if(!(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA')) {
+		item = $('.has-error input, .has-error input, .has-error textarea', item)[0];
+	}
+	if(item) {
+		try {
+			item.focus();
+			select && item.select();
+		} catch(e) {}
+	}
 };
 
 YomFormUtil.setMsg = function(msg) {
