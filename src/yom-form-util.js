@@ -4,17 +4,13 @@ var _msg = {};
 var _commonMsg = {};
 var _validators = {};
 
-function _getMsg(key, type) {
-	return _msg[key] && _msg[key][type] || _commonMsg[type];
-};
-
 function _getGroup(item) {
 	var group = $(item).closest('.form-group, .validate-group');
 	if(group.length) {
 		return group;
 	}
 	return null;
-};
+}
 
 function _getHelper(item, group) {
 	var helper;
@@ -26,9 +22,15 @@ function _getHelper(item, group) {
 		}
 	}
 	return null;
+}
+
+var YomFormUtil = {};
+
+YomFormUtil.getMsg = function(type, key) {
+	return key && _msg[key] && _msg[key][type] || _commonMsg[type];
 };
 
-function _formatMsg(msg, data) {
+YomFormUtil.formatMsg = function(msg, data) {
 	msg = msg + '';
 	if(data) {
 		$.each(data, function(key, val) {
@@ -37,8 +39,6 @@ function _formatMsg(msg, data) {
 	}
 	return msg;
 };
-
-var YomFormUtil = {};
 
 YomFormUtil.addValidator = function(name, validator) {
 	if(validator) {
@@ -120,9 +120,9 @@ YomFormUtil.validateOne = function(item) {
 			}
 		}
 		if(!passed) {
-			msg = _getMsg(key, type);
+			msg = YomFormUtil.getMsg(type, key);
 			if(msgData) {
-				msg = _formatMsg(msg, msgData);
+				msg = YomFormUtil.formatMsg(msg, msgData);
 			}
 			res = {
 				passed: false,
