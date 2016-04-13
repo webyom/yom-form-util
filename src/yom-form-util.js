@@ -26,8 +26,9 @@ function _getHelper(item, group) {
 
 var YomFormUtil = {};
 
-YomFormUtil.getMsg = function(type, key) {
-	return key && _msg[key] && _msg[key][type] || _commonMsg[type];
+YomFormUtil.getMsg = function(item, type, key) {
+	var msg = $(item).data(type + '-msg');
+	return msg || key && _msg[key] && _msg[key][type] || _commonMsg[type];
 };
 
 YomFormUtil.formatMsg = function(msg, data) {
@@ -118,9 +119,22 @@ YomFormUtil.validateOne = function(item) {
 				msgData = passed.msgData;
 				passed = passed.passed;
 			}
+		} else {
+			var value = $.trim($(item).val());
+			if(value) {
+				validator = $(item).data(type + '-regexp');
+				if(validator) {
+					passed = new RegExp(validator, $(item).data(type + '-regexp-attr')).test(value);
+				} else {
+					validator = $(item).data(type + '-neg-regexp');
+					if(validator) {
+						passed = !(new RegExp(validator, $(item).data(type + '-neg-regexp-attr')).test(value));
+					}
+				}
+			}
 		}
 		if(!passed) {
-			msg = YomFormUtil.getMsg(type, key);
+			msg = YomFormUtil.getMsg(item, type, key);
 			if(msgData) {
 				msg = YomFormUtil.formatMsg(msg, msgData);
 			}
@@ -472,6 +486,7 @@ YomFormUtil.addValidator({
 	mandatory: require('./validator-mandatory'),
 	email: require('./validator-email'),
 	emailList: require('./validator-email-list'),
+	mobile: require('./validator-mobile'),
 	name: require('./validator-name'),
 	password: require('./validator-password'),
 	maxLength: require('./validator-max-length'),
@@ -492,6 +507,7 @@ YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
 	mandatory: '必填项。',
 	email: '无效的邮件地址。',
 	emailList: '无效的邮件地址。',
+	mobile: '无效的手机号码。',
 	name: '不能包含分号。',
 	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格。',
 	maxLength: '输入长度超过限制，需要删除{{1}}个字。',

@@ -1,4 +1,4 @@
-define(['require', 'exports', 'module', './validator-mandatory', './validator-email', './validator-email-list', './validator-name', './validator-password', './validator-max-length', './validator-max-byte-length', './validator-url', './validator-set', './validator-number', './validator-integer', './validator-number-range', './validator-integer-range', './validator-datetime', './validator-word-upper-case', './validator-domain', './validator-domain-list'], function(require, exports, module) {
+define(['require', 'exports', 'module', './validator-mandatory', './validator-email', './validator-email-list', './validator-mobile', './validator-name', './validator-password', './validator-max-length', './validator-max-byte-length', './validator-url', './validator-set', './validator-number', './validator-integer', './validator-number-range', './validator-integer-range', './validator-datetime', './validator-word-upper-case', './validator-domain', './validator-domain-list'], function(require, exports, module) {
 var $ = window.jQuery || window.$;
 
 var _msg = {};
@@ -27,8 +27,9 @@ function _getHelper(item, group) {
 
 var YomFormUtil = {};
 
-YomFormUtil.getMsg = function(type, key) {
-	return key && _msg[key] && _msg[key][type] || _commonMsg[type];
+YomFormUtil.getMsg = function(item, type, key) {
+	var msg = $(item).data(type + '-msg');
+	return msg || key && _msg[key] && _msg[key][type] || _commonMsg[type];
 };
 
 YomFormUtil.formatMsg = function(msg, data) {
@@ -119,9 +120,22 @@ YomFormUtil.validateOne = function(item) {
 				msgData = passed.msgData;
 				passed = passed.passed;
 			}
+		} else {
+			var value = $.trim($(item).val());
+			if(value) {
+				validator = $(item).data(type + '-regexp');
+				if(validator) {
+					passed = new RegExp(validator, $(item).data(type + '-regexp-attr')).test(value);
+				} else {
+					validator = $(item).data(type + '-neg-regexp');
+					if(validator) {
+						passed = !(new RegExp(validator, $(item).data(type + '-neg-regexp-attr')).test(value));
+					}
+				}
+			}
 		}
 		if(!passed) {
-			msg = YomFormUtil.getMsg(type, key);
+			msg = YomFormUtil.getMsg(item, type, key);
 			if(msgData) {
 				msg = YomFormUtil.formatMsg(msg, msgData);
 			}
@@ -473,6 +487,7 @@ YomFormUtil.addValidator({
 	mandatory: require('./validator-mandatory'),
 	email: require('./validator-email'),
 	emailList: require('./validator-email-list'),
+	mobile: require('./validator-mobile'),
 	name: require('./validator-name'),
 	password: require('./validator-password'),
 	maxLength: require('./validator-max-length'),
@@ -493,6 +508,7 @@ YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
 	mandatory: '必填项。',
 	email: '无效的邮件地址。',
 	emailList: '无效的邮件地址。',
+	mobile: '无效的手机号码。',
 	name: '不能包含分号。',
 	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格。',
 	maxLength: '输入长度超过限制，需要删除{{1}}个字。',
@@ -597,6 +613,20 @@ module.exports = function(item) {
 		passed: passed,
 		data: data
 	};
+};
+
+});
+
+define('./validator-mobile', ['require', 'exports', 'module'], function(require, exports, module) {
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	if(!$.trim(item.value)) {
+		return true;
+	}
+	item.value = $.trim(item.value.toLowerCase());
+	passed = (/^(0|86|17951)?(13[0-9]|15[012356789]|17[0-9]|18[0-9]|14[57]|106[0-9]{2})[0-9]{8}$/).test(item.value);
+	return passed;
 };
 
 });
