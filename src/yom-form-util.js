@@ -87,6 +87,7 @@ YomFormUtil.validateOne = function(item) {
 	var request = $(item).data('validator');
 	var tmp, key, list, fieldData;
 	if(!request) {
+		YomFormUtil.dehighLight(item);
 		return res;
 	}
 	tmp = request.split(/\s*:\s*/);
@@ -151,7 +152,7 @@ YomFormUtil.validateOne = function(item) {
 		if(fieldData) {
 			res.data = fieldData;
 		}
-		YomFormUtil.highLight(item, '', '');
+		YomFormUtil.dehighLight(item);
 	}
 	return res;
 };
