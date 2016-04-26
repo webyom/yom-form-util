@@ -27,7 +27,7 @@ function _getHelper(item, group) {
 var YomFormUtil = {};
 
 YomFormUtil.getMsg = function(item, type, key) {
-	var msg = $(item).data(type + '-msg');
+	var msg = $(item).attr('data-' + type + '-msg');
 	return msg || key && _msg[key] && _msg[key][type] || _commonMsg[type];
 };
 
@@ -84,7 +84,7 @@ YomFormUtil.validateOne = function(item) {
 	var res = {
 		passed: true
 	};
-	var request = $(item).data('validator');
+	var request = $(item).attr('data-validator');
 	var tmp, key, list, fieldData;
 	if(!request) {
 		YomFormUtil.dehighLight(item);
@@ -123,13 +123,13 @@ YomFormUtil.validateOne = function(item) {
 		} else {
 			var value = $.trim($(item).val());
 			if(value) {
-				validator = $(item).data(type + '-regexp');
+				validator = $(item).attr('data-' + type + '-regexp');
 				if(validator) {
-					passed = new RegExp(validator, $(item).data(type + '-regexp-attr')).test(value);
+					passed = new RegExp(validator, $(item).attr('data-' + type + '-regexp-attr')).test(value);
 				} else {
-					validator = $(item).data(type + '-neg-regexp');
+					validator = $(item).attr('data-' + type + '-neg-regexp');
 					if(validator) {
-						passed = !(new RegExp(validator, $(item).data(type + '-neg-regexp-attr')).test(value));
+						passed = !(new RegExp(validator, $(item).attr('data-' + type + '-neg-regexp-attr')).test(value));
 					}
 				}
 			}
@@ -207,11 +207,19 @@ YomFormUtil.getData = function(container, opt) {
 			case 'INPUT':
 				inputType = item.type.toUpperCase();
 				if(inputType == 'CHECKBOX') {
-					if(returnArray) {
-						res.push(item.checked ? 'on' : 'off');
+					if($(item).attr('data-std-form')) {
+						if(returnArray) {
+							res.push(item.checked ? 'on' : 'off');
+						} else {
+							if(item.checked) {
+								res[item.name] = 'on';
+							}
+						}
 					} else {
-						if(item.checked) {
-							res[item.name] = 'on';
+						if(returnArray) {
+							res.push(item.checked);
+						} else {
+							res[item.name] = item.checked;
 						}
 					}
 				} else if(inputType == 'RADIO') {
@@ -327,8 +335,8 @@ YomFormUtil.initInputHint = function() {
 		var hintBox = $('.input-hint-box', hintWrapper);
 		var hintContent = hintBox.html();
 		if(hintContent) {
-			if(!hintBox.data('default-hint-content')) {
-				hintBox.data('default-hint-content', hintContent);
+			if(!hintBox.attr('data-default-hint-content')) {
+				hintBox.attr('data-default-hint-content', hintContent);
 			}
 			hintWrapper.addClass('input-hint-on');
 		}
@@ -370,7 +378,7 @@ YomFormUtil.hideInputHint = function(inputBox, clear) {
 	hintWrapper.removeClass('input-hint-on input-hint-error input-hint-success input-hint-warning input-hint-info');
 	if(clear) {
 		hintWrapper.removeClass('input-hint-error, input-hint-success, input-hint-warning, input-hint-info');
-		hintBox.html(hintBox.data('default-hint-content') || '');
+		hintBox.html(hintBox.attr('data-default-hint-content') || '');
 	}
 };
 
