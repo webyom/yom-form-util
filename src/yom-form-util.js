@@ -1,8 +1,14 @@
 var $ = window.jQuery || window.$;
 
+var UNDEFINED = {};
+
 var _msg = {};
 var _commonMsg = {};
 var _validators = {};
+
+function _getEmptyValue(emptyValue) {
+	return typeof emptyValue == 'undefined' ? null : emptyValue == UNDEFINED ? undefined : emptyValue;
+}
 
 function _getGroup(item) {
 	var group = $(item).closest('.form-group, .validate-group');
@@ -25,6 +31,8 @@ function _getHelper(item, group) {
 }
 
 var YomFormUtil = {};
+
+YomFormUtil.UNDEFINED = UNDEFINED;
 
 YomFormUtil.getMsg = function(item, type, key) {
 	var msg = $(item).attr('data-' + type + '-msg');
@@ -192,6 +200,7 @@ YomFormUtil.validate = function(container, opt) {
 
 YomFormUtil.getData = function(container, opt) {
 	opt = opt || {};
+	var emptyValue = _getEmptyValue(opt.emptyValue);
 	var returnArray = opt.returnArray;
 	var res = returnArray ? [] : {};
 	var inputType;
@@ -207,7 +216,7 @@ YomFormUtil.getData = function(container, opt) {
 			case 'INPUT':
 				inputType = item.type.toUpperCase();
 				if(inputType == 'CHECKBOX') {
-					if($(item).attr('data-std-form')) {
+					if(opt.stdForm) {
 						if(returnArray) {
 							res.push(item.checked ? 'on' : 'off');
 						} else {
@@ -224,26 +233,24 @@ YomFormUtil.getData = function(container, opt) {
 					}
 				} else if(inputType == 'RADIO') {
 					if(returnArray) {
-						res.push(item.checked ? item.value : null);
+						res.push(item.checked ? item.value : emptyValue);
 					} else {
-						if(item.checked) {
-							res[item.name] = item.value;
-						}
+						res[item.name] = item.checked ? item.value : emptyValue;
 					}
 				} else {
 					if(returnArray) {
-						res.push(item.value);
+						res.push(item.value || emptyValue);
 					} else {
-						res[item.name] = item.value;
+						res[item.name] = item.value || emptyValue;
 					}
 				}
 				break;
 			case 'SELECT':
 			case 'TEXTAREA':
 				if(returnArray) {
-					res.push(item.value);
+					res.push(item.value || emptyValue);
 				} else {
-					res[item.name] = item.value;
+					res[item.name] = item.value || emptyValue;
 				}
 				break;
 			default:
