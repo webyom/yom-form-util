@@ -234,8 +234,8 @@ YomFormUtil.getData = function(container, opt) {
 				} else if(inputType == 'RADIO') {
 					if(returnArray) {
 						res.push(item.checked ? item.value : emptyValue);
-					} else {
-						res[item.name] = item.checked ? item.value : emptyValue;
+					} else if (item.checked) {
+						res[item.name] = item.value || emptyValue;
 					}
 				} else {
 					if(returnArray) {
