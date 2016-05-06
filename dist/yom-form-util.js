@@ -74,7 +74,7 @@ YomFormUtil.highLight = function(item, msg, type) {
 			group.addClass('has-' + (type || 'error'));
 			if(helper) {
 				if(msg) {
-					helper.html(msg).css('display', helper.hasClass('help-block') ? 'block' : 'inline-block');
+					helper.html(msg).attr('title', msg).css('display', helper.hasClass('help-block') ? 'block' : 'inline-block');
 					return true;
 				} else {
 					helper.hide();
