@@ -1,15 +1,16 @@
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var val;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
-		return true;
-	}
 	item.value = $.trim(item.value);
-	val = +item.value;
-	if(isNaN(val)) {
-		return false;
-	} else {
-		item.value = val;
+	if(!item.value) {
 		return true;
 	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val)) {
+		return false;
+	}
+	item.value = val;
+	return true;
 };

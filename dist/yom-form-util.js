@@ -591,13 +591,15 @@ module.exports = function(item) {
 });
 
 define('./validator-email', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
 		return true;
 	}
-	item.value = $.trim(item.value.toLowerCase());
 	passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(item.value);
 	return passed;
 };
@@ -610,9 +612,6 @@ var $ = window.jQuery || window.$;
 module.exports = function(item) {
 	var passed, data;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
-		return true;
-	}
 	item.value = item.value.toLowerCase()
 		.replace(/\s*\n\s*/g, '\n')
 		.replace(/,/g, ';')
@@ -620,6 +619,9 @@ module.exports = function(item) {
 		.replace(/(\s*;\s*)+/g, '; ')
 		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
 	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
 	data = item.value.split(/; |\n/);
 	$.each(data, function(i, val) {
 		passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(val);
@@ -634,13 +636,15 @@ module.exports = function(item) {
 });
 
 define('./validator-mobile', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
 		return true;
 	}
-	item.value = $.trim(item.value.toLowerCase());
 	passed = (/^(0|86|17951)?(13[0-9]|15[012356789]|17[0-9]|18[0-9]|14[57]|106[0-9]{2})[0-9]{8}$/).test(item.value);
 	return passed;
 };
@@ -648,6 +652,8 @@ module.exports = function(item) {
 });
 
 define('./validator-name', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	item = $(item)[0];
 	var passed = item.value.indexOf(';') < 0;
@@ -657,6 +663,8 @@ module.exports = function(item) {
 });
 
 define('./validator-password', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	item = $(item)[0];
 	var len = item.value.length;
@@ -667,6 +675,8 @@ module.exports = function(item) {
 });
 
 define('./validator-max-length', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item, maxLen) {
 	item = $(item)[0];
 	var inputLen = item.value.length;
@@ -680,6 +690,8 @@ module.exports = function(item, maxLen) {
 });
 
 define('./validator-max-byte-length', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 function _getByteLength(str) {
 	return str.replace(/[^\x00-\xff]/g, 'xx').length;
 }
@@ -697,13 +709,15 @@ module.exports = function(item, maxLen) {
 });
 
 define('./validator-url', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
 		return true;
 	}
-	item.value = $.trim(item.value);
 	passed = (/^https?:\/\//).test(item.value);
 	return passed;
 };
@@ -711,6 +725,8 @@ module.exports = function(item) {
 });
 
 define('./validator-set', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 var _SEPARATOR = '||';
 var _MAX_LENGTH = 80;
 
@@ -751,47 +767,60 @@ module.exports = function(item) {
 });
 
 define('./validator-number', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var val;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
-		return true;
-	}
 	item.value = $.trim(item.value);
-	val = +item.value;
-	if(isNaN(val)) {
-		return false;
-	} else {
-		item.value = val;
+	if(!item.value) {
 		return true;
 	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val)) {
+		return false;
+	}
+	item.value = val;
+	return true;
 };
 
 });
 
 define('./validator-integer', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
+var MAX_SAFE_INTEGER = 9007199254740991;
+var MIN_SAFE_INTEGER = -9007199254740991;
+
 module.exports = function(item) {
 	var val;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
-		return true;
-	}
 	item.value = $.trim(item.value);
-	val = +item.value;
-	if(isNaN(val) || (val + '').indexOf('.') >= 0) {
-		return false;
-	} else {
-		item.value = val;
+	if(!item.value) {
 		return true;
 	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (val + '').indexOf('.') >= 0) {
+		return false;
+	}
+	item.value = val;
+	return true;
 };
 
 });
 
 define('./validator-number-range', ['require', 'exports', 'module', './validator-number'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 var numberValidator = require('./validator-number');
 
 module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
 	range = range.split('~');
 	if(!numberValidator({value: range[0]}) || !numberValidator({value: range[1]}) || !numberValidator(item)) {
 		return {
@@ -799,7 +828,8 @@ module.exports = function(item, range) {
 			msgData: [+range[0], +range[1]]
 		};
 	}
-	if(!(+item.value >= +range[0] && +item.value <= +range[1])) {
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
 		return {
 			passed: false,
 			msgData: [+range[0], +range[1]]
@@ -814,9 +844,17 @@ module.exports = function(item, range) {
 });
 
 define('./validator-integer-range', ['require', 'exports', 'module', './validator-integer'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 var integerValidator = require('./validator-integer');
 
 module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
 	range = range.split('~');
 	if(!integerValidator({value: range[0]}) || !integerValidator({value: range[1]}) || !integerValidator(item)) {
 		return {
@@ -824,7 +862,8 @@ module.exports = function(item, range) {
 			msgData: [+range[0], +range[1]]
 		};
 	}
-	if(!(+item.value >= +range[0] && +item.value <= +range[1])) {
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
 		return {
 			passed: false,
 			msgData: [+range[0], +range[1]]
@@ -839,18 +878,20 @@ module.exports = function(item, range) {
 });
 
 define('./validator-datetime', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 module.exports = function(item, format) {
 	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if(!item.value) {
 		return {
 			passed: true,
 			data: null
 		};
 	}
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
 	val = val.split(' ');
 	format = format.split(' ');
 	if(val.length != format.length) {
@@ -996,13 +1037,15 @@ module.exports = function(item, format) {
 });
 
 define('./validator-word-upper-case', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	item.value = $.trim(item.value.toUpperCase());
+	if(!item.value) {
 		return true;
 	}
-	item.value = $.trim(item.value.toUpperCase());
 	passed = !(/\W/).test(item.value);
 	return passed;
 };
@@ -1010,13 +1053,15 @@ module.exports = function(item) {
 });
 
 define('./validator-domain', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	item.value = $.trim(item.value);
+	if(!item.value) {
 		return true;
 	}
-	item.value = $.trim(item.value);
 	passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(item.value);
 	return passed;
 };
@@ -1029,9 +1074,6 @@ var $ = window.jQuery || window.$;
 module.exports = function(item) {
 	var passed, data;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
-		return true;
-	}
 	item.value = item.value.toLowerCase()
 		.replace(/\s*\n\s*/g, '\n')
 		.replace(/,/g, ';')
@@ -1039,6 +1081,9 @@ module.exports = function(item) {
 		.replace(/(\s*;\s*)+/mg, '; ')
 		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
 	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
 	data = item.value.split(/; |\n/);
 	$.each(data, function(i, val) {
 		passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(val);

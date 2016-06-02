@@ -1,3 +1,5 @@
+var $ = window.jQuery || window.$;
+
 var _SEPARATOR = '||';
 var _MAX_LENGTH = 80;
 

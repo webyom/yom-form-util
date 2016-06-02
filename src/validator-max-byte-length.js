@@ -1,3 +1,5 @@
+var $ = window.jQuery || window.$;
+
 function _getByteLength(str) {
 	return str.replace(/[^\x00-\xff]/g, 'xx').length;
 }

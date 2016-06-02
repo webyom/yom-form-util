@@ -1,3 +1,5 @@
+var $ = window.jQuery || window.$;
+
 module.exports = function(item, maxLen) {
 	item = $(item)[0];
 	var inputLen = item.value.length;

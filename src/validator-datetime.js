@@ -1,15 +1,17 @@
+var $ = window.jQuery || window.$;
+
 var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 module.exports = function(item, format) {
 	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
 	item = $(item)[0];
-	if(!$.trim(item.value)) {
+	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if(!item.value) {
 		return {
 			passed: true,
 			data: null
 		};
 	}
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
 	val = val.split(' ');
 	format = format.split(' ');
 	if(val.length != format.length) {

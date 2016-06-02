@@ -1,3 +1,5 @@
+var $ = window.jQuery || window.$;
+
 module.exports = function(item) {
 	item = $(item)[0];
 	var len = item.value.length;
