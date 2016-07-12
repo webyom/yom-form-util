@@ -8,9 +8,12 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val)) {
+	if(isNaN(val) || !isFinite(val) || (/\.$/).test(item.value)) {
 		return false;
 	}
-	item.value = val;
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
+	}
 	return true;
 };

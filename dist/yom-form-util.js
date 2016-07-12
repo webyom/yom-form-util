@@ -1,4 +1,4 @@
-define(['require', 'exports', 'module', './validator-mandatory', './validator-email', './validator-email-list', './validator-mobile', './validator-name', './validator-password', './validator-max-length', './validator-max-byte-length', './validator-url', './validator-set', './validator-number', './validator-integer', './validator-number-range', './validator-integer-range', './validator-datetime', './validator-word-upper-case', './validator-domain', './validator-domain-list'], function(require, exports, module) {
+define(['require', 'exports', 'module', './validator-mandatory', './validator-email', './validator-email-list', './validator-mobile', './validator-name', './validator-password', './validator-max-length', './validator-max-byte-length', './validator-url', './validator-set', './validator-number', './validator-number-range', './validator-number-digits', './validator-integer', './validator-integer-range', './validator-datetime', './validator-word-upper-case', './validator-domain', './validator-domain-list'], function(require, exports, module) {
 var $ = window.jQuery || window.$;
 
 var UNDEFINED = {};
@@ -511,8 +511,9 @@ YomFormUtil.addValidator({
 	url: require('./validator-url'),
 	set: require('./validator-set'),
 	number: require('./validator-number'),
-	integer: require('./validator-integer'),
 	numberRange: require('./validator-number-range'),
+	numberDigits: require('./validator-number-digits'),
+	integer: require('./validator-integer'),
 	integerRange: require('./validator-integer-range'),
 	datetime: require('./validator-datetime'),
 	wordUpperCase: require('./validator-word-upper-case'),
@@ -521,24 +522,25 @@ YomFormUtil.addValidator({
 });
 
 YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
-	mandatory: '必填项。',
-	email: '无效的邮件地址。',
-	emailList: '无效的邮件地址。',
-	mobile: '无效的手机号码。',
-	name: '不能包含分号。',
-	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格。',
-	maxLength: '输入长度超过限制，需要删除{{1}}个字。',
-	maxByteLength: '输入长度超过限制，需要删除{{1}}个字。',
-	url: '无效的URL。',
-	set: '不能含有重复的值，单个值的最大长度是80，值不能包含“||”。',
-	number: '必须输入一个数字。',
-	integer: '必须输入一个整数。',
-	numberRange: '必须输入{{0}}到{{1}}范围之间的数字。',
-	integerRange: '必须输入{{0}}到{{1}}范围之间的整数。',
-	datetime: '无效的日期时间格式。',
-	wordUpperCase: '只能输入大写字母、数字或下划线。',
-	domain: '无效的域名。',
-	domainList: '无效的域名。'
+	mandatory: '必填项',
+	email: '无效的邮件地址',
+	emailList: '无效的邮件地址',
+	mobile: '无效的手机号码',
+	name: '不能包含分号',
+	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格',
+	maxLength: '输入长度超过限制，需要删除{{1}}个字',
+	maxByteLength: '输入长度超过限制，需要删除{{1}}个字',
+	url: '无效的URL',
+	set: '不能含有重复的值，单个值的最大长度是80，值不能包含“||”',
+	number: '必须输入一个数字',
+	numberRange: '必须输入{{0}}到{{1}}范围之间的数字',
+	numberDigits: '保留到小数点后{{0}}位',
+	integer: '必须输入一个整数',
+	integerRange: '必须输入{{0}}到{{1}}范围之间的整数',
+	datetime: '无效的日期时间格式',
+	wordUpperCase: '只能输入大写字母、数字或下划线',
+	domain: '无效的域名',
+	domainList: '无效的域名'
 });
 
 module.exports = YomFormUtil;
@@ -777,33 +779,13 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val)) {
+	if(isNaN(val) || !isFinite(val) || (/\.$/).test(item.value)) {
 		return false;
 	}
-	item.value = val;
-	return true;
-};
-
-});
-
-define('./validator-integer', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var MAX_SAFE_INTEGER = 9007199254740991;
-var MIN_SAFE_INTEGER = -9007199254740991;
-
-module.exports = function(item) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
 	}
-	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (val + '').indexOf('.') >= 0) {
-		return false;
-	}
-	item.value = val;
 	return true;
 };
 
@@ -839,6 +821,68 @@ module.exports = function(item, range) {
 		passed: true,
 		msgData: [+range[0], +range[1]]
 	};
+};
+
+});
+
+define('./validator-number-digits', ['require', 'exports', 'module', './validator-integer', './validator-number'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
+var integerValidator = require('./validator-integer');
+var numberValidator = require('./validator-number');
+
+module.exports = function(item, digits) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	if(!integerValidator({value: digits}) || !numberValidator(item)) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	val = +item.value;
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
+	}
+	decimalPart = (val + '').split('.')[1] || item.value.split('.')[1];
+	if(decimalPart && decimalPart.toLowerCase().indexOf('e') === -1 && decimalPart.length > digits) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	return {
+		passed: true,
+		msgData: [+digits]
+	};
+};
+
+});
+
+define('./validator-integer', ['require', 'exports', 'module'], function(require, exports, module) {
+var $ = window.jQuery || window.$;
+
+var MAX_SAFE_INTEGER = 9007199254740991;
+var MIN_SAFE_INTEGER = -9007199254740991;
+
+module.exports = function(item) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (val + '').indexOf('.') >= 0) {
+		return false;
+	}
+	item.value = val;
+	return true;
 };
 
 });
