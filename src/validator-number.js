@@ -8,7 +8,7 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || (/\.$/).test(item.value)) {
+	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
 		return false;
 	}
 	var decimalPart = item.value.split('.')[1];

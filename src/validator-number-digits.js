@@ -21,8 +21,8 @@ module.exports = function(item, digits) {
 	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
 		item.value = val;
 	}
-	decimalPart = (val + '').split('.')[1] || item.value.split('.')[1];
-	if(decimalPart && decimalPart.toLowerCase().indexOf('e') === -1 && decimalPart.length > digits) {
+	decimalPart = item.value.split('.')[1];
+	if(decimalPart && decimalPart.length > digits) {
 		return {
 			passed: false,
 			msgData: [+digits]

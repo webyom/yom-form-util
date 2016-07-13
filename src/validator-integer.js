@@ -11,7 +11,7 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (val + '').indexOf('.') >= 0) {
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
 		return false;
 	}
 	item.value = val;

@@ -779,7 +779,7 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || (/\.$/).test(item.value)) {
+	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
 		return false;
 	}
 	var decimalPart = item.value.split('.')[1];
@@ -849,8 +849,8 @@ module.exports = function(item, digits) {
 	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
 		item.value = val;
 	}
-	decimalPart = (val + '').split('.')[1] || item.value.split('.')[1];
-	if(decimalPart && decimalPart.toLowerCase().indexOf('e') === -1 && decimalPart.length > digits) {
+	decimalPart = item.value.split('.')[1];
+	if(decimalPart && decimalPart.length > digits) {
 		return {
 			passed: false,
 			msgData: [+digits]
@@ -878,7 +878,7 @@ module.exports = function(item) {
 		return true;
 	}
 	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (val + '').indexOf('.') >= 0) {
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
 		return false;
 	}
 	item.value = val;
