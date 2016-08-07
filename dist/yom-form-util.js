@@ -776,17 +776,25 @@ module.exports = function(item) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
-		return false;
+		return {
+			passed: false
+		};
 	}
 	var decimalPart = item.value.split('.')[1];
 	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
 		item.value = val;
 	}
-	return true;
+	return {
+		passed: true,
+		data: val
+	};
 };
 
 });
@@ -801,10 +809,13 @@ module.exports = function(item, range) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	range = range.split('~');
-	if(!numberValidator({value: range[0]}) || !numberValidator({value: range[1]}) || !numberValidator(item)) {
+	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
 		return {
 			passed: false,
 			msgData: [+range[0], +range[1]]
@@ -819,6 +830,7 @@ module.exports = function(item, range) {
 	}
 	return {
 		passed: true,
+		data: val,
 		msgData: [+range[0], +range[1]]
 	};
 };
@@ -836,9 +848,12 @@ module.exports = function(item, digits) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
-	if(!integerValidator({value: digits}) || !numberValidator(item)) {
+	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
 		return {
 			passed: false,
 			msgData: [+digits]
@@ -858,6 +873,7 @@ module.exports = function(item, digits) {
 	}
 	return {
 		passed: true,
+		data: val,
 		msgData: [+digits]
 	};
 };
@@ -875,14 +891,22 @@ module.exports = function(item) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
-		return false;
+		return {
+			passed: false
+		};
 	}
 	item.value = val;
-	return true;
+	return {
+		passed: true,
+		data: val
+	};
 };
 
 });
@@ -897,10 +921,13 @@ module.exports = function(item, range) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	range = range.split('~');
-	if(!integerValidator({value: range[0]}) || !integerValidator({value: range[1]}) || !integerValidator(item)) {
+	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
 		return {
 			passed: false,
 			msgData: [+range[0], +range[1]]
@@ -915,6 +942,7 @@ module.exports = function(item, range) {
 	}
 	return {
 		passed: true,
+		data: val,
 		msgData: [+range[0], +range[1]]
 	};
 };

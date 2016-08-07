@@ -8,12 +8,20 @@ module.exports = function(item) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
-		return false;
+		return {
+			passed: false
+		};
 	}
 	item.value = val;
-	return true;
+	return {
+		passed: true,
+		data: val
+	};
 };

@@ -5,15 +5,23 @@ module.exports = function(item) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
-		return false;
+		return {
+			passed: false
+		};
 	}
 	var decimalPart = item.value.split('.')[1];
 	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
 		item.value = val;
 	}
-	return true;
+	return {
+		passed: true,
+		data: val
+	};
 };

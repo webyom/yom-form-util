@@ -8,9 +8,12 @@ module.exports = function(item, digits) {
 	item = $(item)[0];
 	item.value = $.trim(item.value);
 	if(!item.value) {
-		return true;
+		return {
+			passed: true,
+			data: null
+		};
 	}
-	if(!integerValidator({value: digits}) || !numberValidator(item)) {
+	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
 		return {
 			passed: false,
 			msgData: [+digits]
@@ -30,6 +33,7 @@ module.exports = function(item, digits) {
 	}
 	return {
 		passed: true,
+		data: val,
 		msgData: [+digits]
 	};
 };
