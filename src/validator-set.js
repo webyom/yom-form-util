@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 var _SEPARATOR = '||';
 var _MAX_LENGTH = 80;

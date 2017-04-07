@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 module.exports = function(item) {
 	item = $(item)[0];

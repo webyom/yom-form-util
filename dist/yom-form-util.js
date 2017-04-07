@@ -1,5 +1,752 @@
-define(['require', 'exports', 'module', './validator-mandatory', './validator-email', './validator-email-list', './validator-mobile', './validator-name', './validator-password', './validator-max-length', './validator-max-byte-length', './validator-url', './validator-set', './validator-number', './validator-number-range', './validator-number-digits', './validator-integer', './validator-integer-range', './validator-datetime', './validator-word-upper-case', './validator-domain', './validator-domain-list'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("jquery"));
+	else if(typeof define === 'function' && define.amd)
+		define(["jquery"], factory);
+	else if(typeof exports === 'object')
+		exports["YomFormUtil"] = factory(require("jquery"));
+	else
+		root["YomFormUtil"] = factory(root["$"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var MAX_SAFE_INTEGER = 9007199254740991;
+var MIN_SAFE_INTEGER = -9007199254740991;
+
+module.exports = function(item) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
+		return {
+			passed: false
+		};
+	}
+	item.value = val;
+	return {
+		passed: true,
+		data: val
+	};
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
+		return {
+			passed: false
+		};
+	}
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
+	}
+	return {
+		passed: true,
+		data: val
+	};
+};
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+module.exports = function(item, format) {
+	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
+	item = $(item)[0];
+	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	val = val.split(' ');
+	format = format.split(' ');
+	if(val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	dateVal = val[0];
+	timeVal = val[1];
+	dateFormat = format[0];
+	timeFormat = format[1];
+	val = dateVal.match(/\d+/g);
+	format = dateFormat.match(/[yMd]+/g);
+	if(!val || val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	year = +val[0];
+	month = +val[1];
+	date = +val[2];
+	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(!timeFormat) {
+		return {
+			passed: true,
+			data: new Date(year, month - 1, date)
+		};
+	}
+	val = timeVal.match(/\d+/g);
+	format = timeFormat.match(/[Hhms]+/g);
+	if(!val || val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	hour = +val[0];
+	minute = +val[1];
+	second = +val[2];
+	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	return {
+		passed: true,
+		data: new Date(year, month - 1, date, hour, minute, second)
+	};
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed, data;
+	item = $(item)[0];
+	item.value = item.value.toLowerCase()
+		.replace(/\s*\n\s*/g, '\n')
+		.replace(/,/g, ';')
+		.replace(/;*\n;*/g, '\n')
+		.replace(/(\s*;\s*)+/mg, '; ')
+		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	data = item.value.split(/; |\n/);
+	$.each(data, function(i, val) {
+		passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(val);
+		return passed;
+	});
+	return {
+		passed: passed,
+		data: data
+	};
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed, data;
+	item = $(item)[0];
+	item.value = item.value.toLowerCase()
+		.replace(/\s*\n\s*/g, '\n')
+		.replace(/,/g, ';')
+		.replace(/;*\n;*/g, '\n')
+		.replace(/(\s*;\s*)+/g, '; ')
+		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	data = item.value.split(/; |\n/);
+	$.each(data, function(i, val) {
+		passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(val);
+		return passed;
+	});
+	return {
+		passed: passed,
+		data: data
+	};
+};
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var integerValidator = __webpack_require__(1);
+
+module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	range = range.split('~');
+	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: [+range[0], +range[1]]
+		};
+	}
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
+		return {
+			passed: false,
+			msgData: [+range[0], +range[1]]
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: [+range[0], +range[1]]
+	};
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed = false;
+	var inputType, groupType;
+	item = $(item)[0];
+	switch(item.tagName) {
+		case 'INPUT':
+			inputType = item.type.toUpperCase()
+			if(inputType == 'CHECKBOX' || inputType == 'RADIO') {
+				passed = item.checked;
+			} else {
+				item.value = $.trim(item.value);
+				passed = !!item.value;
+			}
+			break;
+		case 'SELECT':
+		case 'TEXTAREA':
+			item.value = $.trim(item.value);
+			passed = !!item.value;
+			break;
+		default:
+			groupType = $(item).data('validate-type');
+			if(groupType == 'checkbox' || groupType == 'radio') {
+				$('input[type="' + groupType + '"]', item).each(function(i, box) {
+					if(box.checked) {
+						passed = true;
+						return false;
+					}
+				});
+			} else if(groupType == 'input') {
+				$('input', item).each(function(i, box) {
+					if(!(/^button|submit|reset|image|checkbox|radio$/i).test(box.type) && $.trim(box.value)) {
+						passed = true;
+						return false;
+					}
+				});
+			}
+	}
+	return passed;
+};
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+function _getByteLength(str) {
+	return str.replace(/[^\x00-\xff]/g, 'xx').length;
+}
+
+module.exports = function(item, maxLen) {
+	item = $(item)[0];
+	var inputLen = _getByteLength(item.value);
+	var passed = inputLen <= maxLen;
+	return {
+		passed: passed,
+		msgData: [maxLen, inputLen - maxLen]
+	};
+};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item, maxLen) {
+	item = $(item)[0];
+	var inputLen = item.value.length;
+	var passed = inputLen <= maxLen;
+	return {
+		passed: passed,
+		msgData: [maxLen, inputLen - maxLen]
+	};
+};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^(0|86|17951)?(13[0-9]|15[012356789]|17[0-9]|18[0-9]|14[57]|106[0-9]{2})[0-9]{8}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	item = $(item)[0];
+	var passed = item.value.indexOf(';') < 0;
+	return passed;
+};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var integerValidator = __webpack_require__(1);
+var numberValidator = __webpack_require__(2);
+
+module.exports = function(item, digits) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	val = +item.value;
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
+	}
+	decimalPart = item.value.split('.')[1];
+	if(decimalPart && decimalPart.length > digits) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: [+digits]
+	};
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var numberValidator = __webpack_require__(2);
+
+module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	range = range.split('~');
+	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: [+range[0], +range[1]]
+		};
+	}
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
+		return {
+			passed: false,
+			msgData: [+range[0], +range[1]]
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: [+range[0], +range[1]]
+	};
+};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	item = $(item)[0];
+	var len = item.value.length;
+	var passed = len >= 6 && len <= 16 && !(/\s/).test(item.value) && (/[a-z]/).test(item.value) && (/[A-Z]/).test(item.value) && (/[0-9]/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var _SEPARATOR = '||';
+var _MAX_LENGTH = 80;
+
+module.exports = function(item) {
+	var itemNameHash = {};
+	var itemNames = [];
+	var hasDuplicated = false;
+	var hasSeparator = false;
+	var hasLengthExceed = false;
+	var passed = true;
+	$.each($(item).val().split('\n'), function(i, name) {
+		name = $.trim(name);
+		if(name) {
+			if(itemNameHash[name]) {
+				hasDuplicated = true;
+				return false;
+			}
+			if(name.indexOf(_SEPARATOR) >= 0) {
+				hasSeparator = true;
+				return false;
+			}
+			if(name.length > _MAX_LENGTH) {
+				hasLengthExceed = true;
+				return false;
+			}
+			itemNameHash[name] = 1;
+			itemNames.push(name);
+		}
+	});
+	passed = !hasDuplicated && !hasSeparator && !hasLengthExceed;
+	passed && $(item).val(itemNames.join('\n'));
+	return {
+		passed: passed,
+		data: itemNames
+	};
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^https?:\/\//).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toUpperCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = !(/\W/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
 
 var UNDEFINED = {};
 
@@ -500,25 +1247,25 @@ YomFormUtil.addText2Input = function (textarea, text, rangeData) {
 };
 
 YomFormUtil.addValidator({
-	mandatory: require('./validator-mandatory'),
-	email: require('./validator-email'),
-	emailList: require('./validator-email-list'),
-	mobile: require('./validator-mobile'),
-	name: require('./validator-name'),
-	password: require('./validator-password'),
-	maxLength: require('./validator-max-length'),
-	maxByteLength: require('./validator-max-byte-length'),
-	url: require('./validator-url'),
-	set: require('./validator-set'),
-	number: require('./validator-number'),
-	numberRange: require('./validator-number-range'),
-	numberDigits: require('./validator-number-digits'),
-	integer: require('./validator-integer'),
-	integerRange: require('./validator-integer-range'),
-	datetime: require('./validator-datetime'),
-	wordUpperCase: require('./validator-word-upper-case'),
-	domain: require('./validator-domain'),
-	domainList: require('./validator-domain-list')
+	mandatory: __webpack_require__(9),
+	email: __webpack_require__(7),
+	emailList: __webpack_require__(6),
+	mobile: __webpack_require__(12),
+	name: __webpack_require__(13),
+	password: __webpack_require__(16),
+	maxLength: __webpack_require__(11),
+	maxByteLength: __webpack_require__(10),
+	url: __webpack_require__(18),
+	set: __webpack_require__(17),
+	number: __webpack_require__(2),
+	numberRange: __webpack_require__(15),
+	numberDigits: __webpack_require__(14),
+	integer: __webpack_require__(1),
+	integerRange: __webpack_require__(8),
+	datetime: __webpack_require__(3),
+	wordUpperCase: __webpack_require__(19),
+	domain: __webpack_require__(5),
+	domainList: __webpack_require__(4)
 });
 
 YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
@@ -545,626 +1292,7 @@ YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
 
 module.exports = YomFormUtil;
 
-});
 
-define('./validator-mandatory', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed = false;
-	var inputType, groupType;
-	item = $(item)[0];
-	switch(item.tagName) {
-		case 'INPUT':
-			inputType = item.type.toUpperCase()
-			if(inputType == 'CHECKBOX' || inputType == 'RADIO') {
-				passed = item.checked;
-			} else {
-				item.value = $.trim(item.value);
-				passed = !!item.value;
-			}
-			break;
-		case 'SELECT':
-		case 'TEXTAREA':
-			item.value = $.trim(item.value);
-			passed = !!item.value;
-			break;
-		default:
-			groupType = $(item).data('validate-type');
-			if(groupType == 'checkbox' || groupType == 'radio') {
-				$('input[type="' + groupType + '"]', item).each(function(i, box) {
-					if(box.checked) {
-						passed = true;
-						return false;
-					}
-				});
-			} else if(groupType == 'input') {
-				$('input', item).each(function(i, box) {
-					if(!(/^button|submit|reset|image|checkbox|radio$/i).test(box.type) && $.trim(box.value)) {
-						passed = true;
-						return false;
-					}
-				});
-			}
-	}
-	return passed;
-};
-
-});
-
-define('./validator-email', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-email-list', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed, data;
-	item = $(item)[0];
-	item.value = item.value.toLowerCase()
-		.replace(/\s*\n\s*/g, '\n')
-		.replace(/,/g, ';')
-		.replace(/;*\n;*/g, '\n')
-		.replace(/(\s*;\s*)+/g, '; ')
-		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	data = item.value.split(/; |\n/);
-	$.each(data, function(i, val) {
-		passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(val);
-		return passed;
-	});
-	return {
-		passed: passed,
-		data: data
-	};
-};
-
-});
-
-define('./validator-mobile', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^(0|86|17951)?(13[0-9]|15[012356789]|17[0-9]|18[0-9]|14[57]|106[0-9]{2})[0-9]{8}$/).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-name', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	item = $(item)[0];
-	var passed = item.value.indexOf(';') < 0;
-	return passed;
-};
-
-});
-
-define('./validator-password', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	item = $(item)[0];
-	var len = item.value.length;
-	var passed = len >= 6 && len <= 16 && !(/\s/).test(item.value) && (/[a-z]/).test(item.value) && (/[A-Z]/).test(item.value) && (/[0-9]/).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-max-length', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item, maxLen) {
-	item = $(item)[0];
-	var inputLen = item.value.length;
-	var passed = inputLen <= maxLen;
-	return {
-		passed: passed,
-		msgData: [maxLen, inputLen - maxLen]
-	};
-};
-
-});
-
-define('./validator-max-byte-length', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-function _getByteLength(str) {
-	return str.replace(/[^\x00-\xff]/g, 'xx').length;
-}
-
-module.exports = function(item, maxLen) {
-	item = $(item)[0];
-	var inputLen = _getByteLength(item.value);
-	var passed = inputLen <= maxLen;
-	return {
-		passed: passed,
-		msgData: [maxLen, inputLen - maxLen]
-	};
-};
-
-});
-
-define('./validator-url', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^https?:\/\//).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-set', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var _SEPARATOR = '||';
-var _MAX_LENGTH = 80;
-
-module.exports = function(item) {
-	var itemNameHash = {};
-	var itemNames = [];
-	var hasDuplicated = false;
-	var hasSeparator = false;
-	var hasLengthExceed = false;
-	var passed = true;
-	$.each($(item).val().split('\n'), function(i, name) {
-		name = $.trim(name);
-		if(name) {
-			if(itemNameHash[name]) {
-				hasDuplicated = true;
-				return false;
-			}
-			if(name.indexOf(_SEPARATOR) >= 0) {
-				hasSeparator = true;
-				return false;
-			}
-			if(name.length > _MAX_LENGTH) {
-				hasLengthExceed = true;
-				return false;
-			}
-			itemNameHash[name] = 1;
-			itemNames.push(name);
-		}
-	});
-	passed = !hasDuplicated && !hasSeparator && !hasLengthExceed;
-	passed && $(item).val(itemNames.join('\n'));
-	return {
-		passed: passed,
-		data: itemNames
-	};
-};
-
-});
-
-define('./validator-number', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
-		return {
-			passed: false
-		};
-	}
-	var decimalPart = item.value.split('.')[1];
-	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
-		item.value = val;
-	}
-	return {
-		passed: true,
-		data: val
-	};
-};
-
-});
-
-define('./validator-number-range', ['require', 'exports', 'module', './validator-number'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var numberValidator = require('./validator-number');
-
-module.exports = function(item, range) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	range = range.split('~');
-	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: [+range[0], +range[1]]
-		};
-	}
-	val = +item.value;
-	if(!(val >= +range[0] && val <= +range[1])) {
-		return {
-			passed: false,
-			msgData: [+range[0], +range[1]]
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: [+range[0], +range[1]]
-	};
-};
-
-});
-
-define('./validator-number-digits', ['require', 'exports', 'module', './validator-integer', './validator-number'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var integerValidator = require('./validator-integer');
-var numberValidator = require('./validator-number');
-
-module.exports = function(item, digits) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: [+digits]
-		};
-	}
-	val = +item.value;
-	var decimalPart = item.value.split('.')[1];
-	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
-		item.value = val;
-	}
-	decimalPart = item.value.split('.')[1];
-	if(decimalPart && decimalPart.length > digits) {
-		return {
-			passed: false,
-			msgData: [+digits]
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: [+digits]
-	};
-};
-
-});
-
-define('./validator-integer', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var MAX_SAFE_INTEGER = 9007199254740991;
-var MIN_SAFE_INTEGER = -9007199254740991;
-
-module.exports = function(item) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
-		return {
-			passed: false
-		};
-	}
-	item.value = val;
-	return {
-		passed: true,
-		data: val
-	};
-};
-
-});
-
-define('./validator-integer-range', ['require', 'exports', 'module', './validator-integer'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var integerValidator = require('./validator-integer');
-
-module.exports = function(item, range) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	range = range.split('~');
-	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: [+range[0], +range[1]]
-		};
-	}
-	val = +item.value;
-	if(!(val >= +range[0] && val <= +range[1])) {
-		return {
-			passed: false,
-			msgData: [+range[0], +range[1]]
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: [+range[0], +range[1]]
-	};
-};
-
-});
-
-define('./validator-datetime', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-module.exports = function(item, format) {
-	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
-	item = $(item)[0];
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	val = val.split(' ');
-	format = format.split(' ');
-	if(val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	dateVal = val[0];
-	timeVal = val[1];
-	dateFormat = format[0];
-	timeFormat = format[1];
-	val = dateVal.match(/\d+/g);
-	format = dateFormat.match(/[yMd]+/g);
-	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	year = +val[0];
-	month = +val[1];
-	date = +val[2];
-	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(!timeFormat) {
-		return {
-			passed: true,
-			data: new Date(year, month - 1, date)
-		};
-	}
-	val = timeVal.match(/\d+/g);
-	format = timeFormat.match(/[Hhms]+/g);
-	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	hour = +val[0];
-	minute = +val[1];
-	second = +val[2];
-	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	return {
-		passed: true,
-		data: new Date(year, month - 1, date, hour, minute, second)
-	};
-};
-
-});
-
-define('./validator-word-upper-case', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toUpperCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = !(/\W/).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-domain', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(item.value);
-	return passed;
-};
-
-});
-
-define('./validator-domain-list', ['require', 'exports', 'module'], function(require, exports, module) {
-var $ = window.jQuery || window.$;
-
-module.exports = function(item) {
-	var passed, data;
-	item = $(item)[0];
-	item.value = item.value.toLowerCase()
-		.replace(/\s*\n\s*/g, '\n')
-		.replace(/,/g, ';')
-		.replace(/;*\n;*/g, '\n')
-		.replace(/(\s*;\s*)+/mg, '; ')
-		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	data = item.value.split(/; |\n/);
-	$.each(data, function(i, val) {
-		passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(val);
-		return passed;
-	});
-	return {
-		passed: passed,
-		data: data
-	};
-};
-
+/***/ })
+/******/ ]);
 });

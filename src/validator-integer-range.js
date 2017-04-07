@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 var integerValidator = require('./validator-integer');
 

@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 function _getByteLength(str) {
 	return str.replace(/[^\x00-\xff]/g, 'xx').length;

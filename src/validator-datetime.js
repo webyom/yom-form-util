@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 

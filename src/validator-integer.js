@@ -1,4 +1,4 @@
-var $ = window.jQuery || window.$;
+var $ = require('jquery');
 
 var MAX_SAFE_INTEGER = 9007199254740991;
 var MIN_SAFE_INTEGER = -9007199254740991;

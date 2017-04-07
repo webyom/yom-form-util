@@ -1,10 +1,13 @@
 {
   "name": "yom-form-util",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "A form util.",
   "keywords": [
     "form util"
   ],
+  "scripts": {
+    "build": "./node_modules/.bin/webpack"
+  },
   "homepage": "https://github.com/webyom/yom-form-util",
   "author": {
     "name": "Gary Wang",
@@ -23,11 +26,10 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "scripts": {},
   "dependencies": {
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
-    "gulp": "^3.8.5",
-    "gulp-amd-bundler": "^0.2.1"
+    "webpack": "^2.3.3"
   }
 }
