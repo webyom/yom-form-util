@@ -20,7 +20,7 @@ module.exports = function(item) {
 			passed = !!item.value;
 			break;
 		default:
-			groupType = $(item).data('validate-type');
+			groupType = $(item).attr('data-validate-type');
 			if(groupType == 'checkbox' || groupType == 'radio') {
 				$('input[type="' + groupType + '"]', item).each(function(i, box) {
 					if(box.checked) {
