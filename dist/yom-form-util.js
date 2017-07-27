@@ -983,7 +983,11 @@ YomFormUtil.getData = function(container, opt) {
 					if(returnArray) {
 						res.push(item.checked ? item.value : emptyValue);
 					} else if (item.checked) {
-						res[item.name] = item.value || emptyValue;
+						if($(item).attr('data-value-type') == 'bool') {
+							res[item.name] = (item.value + '').toLowerCase() == 'false' ? false : true;
+						} else {
+							res[item.name] = item.value || emptyValue;
+						}
 					}
 				} else {
 					if(returnArray) {
