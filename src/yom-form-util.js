@@ -35,7 +35,12 @@ var YomFormUtil = {};
 YomFormUtil.UNDEFINED = UNDEFINED;
 
 YomFormUtil.getMsg = function(item, type, key) {
-	var msg = $(item).attr('data-' + type + '-msg');
+	if (typeof item == 'string') {
+		type = item;
+		key = type;
+		item = null;
+	}
+	var msg = item && $(item).attr('data-' + type + '-msg');
 	return msg || key && _msg[key] && _msg[key][type] || _commonMsg[type];
 };
 
@@ -143,7 +148,7 @@ YomFormUtil.validateOne = function(item) {
 			}
 		}
 		if(!passed) {
-			msg = YomFormUtil.getMsg(item, type, key);
+			msg = YomFormUtil.getMsg($(item), type, key);
 			if(msgData) {
 				msg = YomFormUtil.formatMsg(msg, msgData);
 			}
