@@ -1020,7 +1020,7 @@ YomFormUtil.focus = function(item, select) {
 	item = $(item)[0];
 	var tagName = item.tagName;
 	if(!(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA')) {
-		item = $('.has-error input, .has-error input, .has-error textarea', item)[0];
+		item = $('.has-error input, .has-error select, .has-error textarea', item)[0];
 	}
 	if(item) {
 		try {
