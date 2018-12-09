@@ -1,5 +1,5 @@
 var $ = require('jquery');
-
+var util = require('./util');
 var numberValidator = require('./validator-number');
 
 module.exports = function(item, range) {
@@ -13,22 +13,24 @@ module.exports = function(item, range) {
 		};
 	}
 	range = range.split('~');
+	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;
+	var msgData = [util.formatDecimal(range[0], '0.' + new Array(digits).join('0')), util.formatDecimal(range[1], '0.' + new Array(digits).join('0'))];
 	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	val = +item.value;
 	if(!(val >= +range[0] && val <= +range[1])) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	return {
 		passed: true,
 		data: val,
-		msgData: [+range[0], +range[1]]
+		msgData: msgData
 	};
 };

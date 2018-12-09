@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -150,6 +150,77 @@ module.exports = function(item) {
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+exports.formatDecimal = function (decimal, format, opt) {
+  opt = opt || {};
+  function formatInteger(integer) {
+    var res = [],
+      count = 0;
+    var arr = integer.split('');
+    while (arr.length) {
+      if (count && !(count % 3)) {
+        res.unshift(',');
+      }
+      res.unshift(arr.pop());
+      count++;
+    }
+    return res.join('');
+  }
+  var res = '';
+  var decimalMatchRes, formatMatchRes, fLen, dLen;
+  decimal += '';
+  if (!decimal) {
+    return decimal;
+  }
+  decimalMatchRes = decimal.match(/^(-?)(\w*)(.?)(\w*)/) || [];
+  formatMatchRes = format.match(/^(-?)(\w*)(.?)(\w*)/) || [];
+  if (formatMatchRes[2]) {
+    res += decimalMatchRes[2];
+  }
+  if (formatMatchRes[3] && formatMatchRes[4]) {
+    res += formatMatchRes[3];
+  } else {
+    if (opt.round) {
+      res = Math.round(parseFloat(decimal)) + '';
+    } else if (opt.ceil) {
+      res = Math.ceil(parseFloat(decimal)) + '';
+    }
+    if (opt.formatInteger !== false) {
+      res = formatInteger(res);
+    }
+    return res;
+  }
+  fLen = Math.min(formatMatchRes[4].length, 4);
+  dLen = decimalMatchRes[4].length;
+  res += decimalMatchRes[4].slice(0, fLen);
+  if (fLen > dLen) {
+    res += new Array(fLen - dLen + 1).join('0');
+  }
+  if (
+    dLen > fLen
+    && ((opt.round && +decimalMatchRes[4].charAt(fLen) >= 5)
+      || (opt.ceil && +decimalMatchRes[4].charAt(fLen) > 0))
+  ) {
+    return formatDecimal(
+      (parseFloat(res) * Math.pow(10, fLen) + 1) / Math.pow(10, fLen),
+      format
+    );
+  }
+  res = res.split('.');
+  if (opt.formatInteger !== false) {
+    res[0] = formatInteger(res[0]);
+  }
+  res = res.join('.');
+  if (decimalMatchRes[1] && res != '0') {
+    res = decimalMatchRes[1] + res;
+  }
+  return res;
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -310,7 +381,7 @@ module.exports = function(item, format) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -341,7 +412,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -359,7 +430,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -390,7 +461,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -408,11 +479,11 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
-
+var util = __webpack_require__(3);
 var integerValidator = __webpack_require__(1);
 
 module.exports = function(item, range) {
@@ -426,29 +497,30 @@ module.exports = function(item, range) {
 		};
 	}
 	range = range.split('~');
+	var msgData = [util.formatDecimal(range[0], '0'), util.formatDecimal(range[1], '0')];
 	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	val = +item.value;
 	if(!(val >= +range[0] && val <= +range[1])) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	return {
 		passed: true,
 		data: val,
-		msgData: [+range[0], +range[1]]
+		msgData: msgData
 	};
 };
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -495,7 +567,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -516,7 +588,7 @@ module.exports = function(item, maxLen) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -533,7 +605,7 @@ module.exports = function(item, maxLen) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -551,7 +623,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -564,7 +636,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -609,11 +681,11 @@ module.exports = function(item, digits) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
-
+var util = __webpack_require__(3);
 var numberValidator = __webpack_require__(2);
 
 module.exports = function(item, range) {
@@ -627,29 +699,31 @@ module.exports = function(item, range) {
 		};
 	}
 	range = range.split('~');
+	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;
+	var msgData = [util.formatDecimal(range[0], '0.' + new Array(digits).join('0')), util.formatDecimal(range[1], '0.' + new Array(digits).join('0'))];
 	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	val = +item.value;
 	if(!(val >= +range[0] && val <= +range[1])) {
 		return {
 			passed: false,
-			msgData: [+range[0], +range[1]]
+			msgData: msgData
 		};
 	}
 	return {
 		passed: true,
 		data: val,
-		msgData: [+range[0], +range[1]]
+		msgData: msgData
 	};
 };
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -663,7 +737,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -707,7 +781,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -725,7 +799,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -743,7 +817,7 @@ module.exports = function(item) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -1256,25 +1330,25 @@ YomFormUtil.addText2Input = function (textarea, text, rangeData) {
 };
 
 YomFormUtil.addValidator({
-	mandatory: __webpack_require__(9),
-	email: __webpack_require__(7),
-	emailList: __webpack_require__(6),
-	mobile: __webpack_require__(12),
-	name: __webpack_require__(13),
-	password: __webpack_require__(16),
-	maxLength: __webpack_require__(11),
-	maxByteLength: __webpack_require__(10),
-	url: __webpack_require__(18),
-	set: __webpack_require__(17),
+	mandatory: __webpack_require__(10),
+	email: __webpack_require__(8),
+	emailList: __webpack_require__(7),
+	mobile: __webpack_require__(13),
+	name: __webpack_require__(14),
+	password: __webpack_require__(17),
+	maxLength: __webpack_require__(12),
+	maxByteLength: __webpack_require__(11),
+	url: __webpack_require__(19),
+	set: __webpack_require__(18),
 	number: __webpack_require__(2),
-	numberRange: __webpack_require__(15),
-	numberDigits: __webpack_require__(14),
+	numberRange: __webpack_require__(16),
+	numberDigits: __webpack_require__(15),
 	integer: __webpack_require__(1),
-	integerRange: __webpack_require__(8),
-	datetime: __webpack_require__(3),
-	wordUpperCase: __webpack_require__(19),
-	domain: __webpack_require__(5),
-	domainList: __webpack_require__(4)
+	integerRange: __webpack_require__(9),
+	datetime: __webpack_require__(4),
+	wordUpperCase: __webpack_require__(20),
+	domain: __webpack_require__(6),
+	domainList: __webpack_require__(5)
 });
 
 YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
