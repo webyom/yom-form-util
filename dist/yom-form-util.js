@@ -4,10 +4,10 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["jquery"], factory);
 	else if(typeof exports === 'object')
-		exports["YomFormUtil"] = factory(require("jquery"));
+		exports["default"] = factory(require("jquery"));
 	else
-		root["YomFormUtil"] = factory(root["$"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__) {
+		root["YomFormUtil"] = root["YomFormUtil"] || {}, root["YomFormUtil"]["default"] = factory(root["$"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -43,18 +43,35 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -72,50 +89,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-var MAX_SAFE_INTEGER = 9007199254740991;
-var MIN_SAFE_INTEGER = -9007199254740991;
-
-module.exports = function(item) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	val = +item.value;
-	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
-		return {
-			passed: false
-		};
-	}
-	item.value = val;
-	return {
-		passed: true,
-		data: val
-	};
-};
-
-
-/***/ }),
+/* 1 */,
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -150,6 +136,39 @@ module.exports = function(item) {
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var MAX_SAFE_INTEGER = 9007199254740991;
+var MIN_SAFE_INTEGER = -9007199254740991;
+
+module.exports = function(item) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	val = +item.value;
+	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
+		return {
+			passed: false
+		};
+	}
+	item.value = val;
+	return {
+		passed: true,
+		data: val
+	};
+};
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 exports.formatDecimal = function (decimal, format, opt) {
@@ -220,604 +239,7 @@ exports.formatDecimal = function (decimal, format, opt) {
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-module.exports = function(item, format) {
-	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
-	item = $(item)[0];
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	val = val.split(' ');
-	format = format.split(' ');
-	if(val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	dateVal = val[0];
-	timeVal = val[1];
-	dateFormat = format[0];
-	timeFormat = format[1];
-	val = dateVal.match(/\d+/g);
-	format = dateFormat.match(/[yMd]+/g);
-	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	year = +val[0];
-	month = +val[1];
-	date = +val[2];
-	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(!timeFormat) {
-		return {
-			passed: true,
-			data: new Date(year, month - 1, date)
-		};
-	}
-	val = timeVal.match(/\d+/g);
-	format = timeFormat.match(/[Hhms]+/g);
-	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	hour = +val[0];
-	minute = +val[1];
-	second = +val[2];
-	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
-		return {
-			passed: false,
-			data: null
-		};
-	}
-	return {
-		passed: true,
-		data: new Date(year, month - 1, date, hour, minute, second)
-	};
-};
-
-
-/***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed, data;
-	item = $(item)[0];
-	item.value = item.value.toLowerCase()
-		.replace(/\s*\n\s*/g, '\n')
-		.replace(/,/g, ';')
-		.replace(/;*\n;*/g, '\n')
-		.replace(/(\s*;\s*)+/mg, '; ')
-		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	data = item.value.split(/; |\n/);
-	$.each(data, function(i, val) {
-		passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(val);
-		return passed;
-	});
-	return {
-		passed: passed,
-		data: data
-	};
-};
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed, data;
-	item = $(item)[0];
-	item.value = item.value.toLowerCase()
-		.replace(/\s*\n\s*/g, '\n')
-		.replace(/,/g, ';')
-		.replace(/;*\n;*/g, '\n')
-		.replace(/(\s*;\s*)+/g, '; ')
-		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return true;
-	}
-	data = item.value.split(/; |\n/);
-	$.each(data, function(i, val) {
-		passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(val);
-		return passed;
-	});
-	return {
-		passed: passed,
-		data: data
-	};
-};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-var util = __webpack_require__(3);
-var integerValidator = __webpack_require__(1);
-
-module.exports = function(item, range) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	range = range.split('~');
-	var msgData = [util.formatDecimal(range[0], '0'), util.formatDecimal(range[1], '0')];
-	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: msgData
-		};
-	}
-	val = +item.value;
-	if(!(val >= +range[0] && val <= +range[1])) {
-		return {
-			passed: false,
-			msgData: msgData
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: msgData
-	};
-};
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed = false;
-	var inputType, groupType;
-	item = $(item)[0];
-	switch(item.tagName) {
-		case 'INPUT':
-			inputType = item.type.toUpperCase()
-			if(inputType == 'CHECKBOX' || inputType == 'RADIO') {
-				passed = item.checked;
-			} else {
-				item.value = $.trim(item.value);
-				passed = !!item.value;
-			}
-			break;
-		case 'SELECT':
-		case 'TEXTAREA':
-			item.value = $.trim(item.value);
-			passed = !!item.value;
-			break;
-		default:
-			groupType = $(item).attr('data-validate-type');
-			if(groupType == 'checkbox' || groupType == 'radio') {
-				$('input[type="' + groupType + '"]', item).each(function(i, box) {
-					if(box.checked) {
-						passed = true;
-						return false;
-					}
-				});
-			} else if(groupType == 'input') {
-				$('input', item).each(function(i, box) {
-					if(!(/^button|submit|reset|image|checkbox|radio$/i).test(box.type) && $.trim(box.value)) {
-						passed = true;
-						return false;
-					}
-				});
-			}
-	}
-	return passed;
-};
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-function _getByteLength(str) {
-	return str.replace(/[^\x00-\xff]/g, 'xx').length;
-}
-
-module.exports = function(item, maxLen) {
-	item = $(item)[0];
-	var inputLen = _getByteLength(item.value);
-	var passed = inputLen <= maxLen;
-	return {
-		passed: passed,
-		msgData: [maxLen, inputLen - maxLen]
-	};
-};
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item, maxLen) {
-	item = $(item)[0];
-	var inputLen = item.value.length;
-	var passed = inputLen <= maxLen;
-	return {
-		passed: passed,
-		msgData: [maxLen, inputLen - maxLen]
-	};
-};
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^(0|86|17951)?(13[0-9]|14[57]|15[012356789]|16[6]|17[0-9]|18[0-9]|19[0-9]|106[0-9]{2})[0-9]{8}$/).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	item = $(item)[0];
-	var passed = item.value.indexOf(';') < 0;
-	return passed;
-};
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-var integerValidator = __webpack_require__(1);
-var numberValidator = __webpack_require__(2);
-
-module.exports = function(item, digits) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: [+digits]
-		};
-	}
-	val = +item.value;
-	var decimalPart = item.value.split('.')[1];
-	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
-		item.value = val;
-	}
-	decimalPart = item.value.split('.')[1];
-	if(decimalPart && decimalPart.length > digits) {
-		return {
-			passed: false,
-			msgData: [+digits]
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: [+digits]
-	};
-};
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-var util = __webpack_require__(3);
-var numberValidator = __webpack_require__(2);
-
-module.exports = function(item, range) {
-	var val;
-	item = $(item)[0];
-	item.value = $.trim(item.value);
-	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
-	}
-	range = range.split('~');
-	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;
-	var msgData = [util.formatDecimal(range[0], '0.' + new Array(digits).join('0')), util.formatDecimal(range[1], '0.' + new Array(digits).join('0'))];
-	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
-		return {
-			passed: false,
-			msgData: msgData
-		};
-	}
-	val = +item.value;
-	if(!(val >= +range[0] && val <= +range[1])) {
-		return {
-			passed: false,
-			msgData: msgData
-		};
-	}
-	return {
-		passed: true,
-		data: val,
-		msgData: msgData
-	};
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	item = $(item)[0];
-	var len = item.value.length;
-	var passed = len >= 6 && len <= 16 && !(/\s/).test(item.value) && (/[a-z]/).test(item.value) && (/[A-Z]/).test(item.value) && (/[0-9]/).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-var _SEPARATOR = '||';
-var _MAX_LENGTH = 80;
-
-module.exports = function(item) {
-	var itemNameHash = {};
-	var itemNames = [];
-	var hasDuplicated = false;
-	var hasSeparator = false;
-	var hasLengthExceed = false;
-	var passed = true;
-	$.each($(item).val().split('\n'), function(i, name) {
-		name = $.trim(name);
-		if(name) {
-			if(itemNameHash[name]) {
-				hasDuplicated = true;
-				return false;
-			}
-			if(name.indexOf(_SEPARATOR) >= 0) {
-				hasSeparator = true;
-				return false;
-			}
-			if(name.length > _MAX_LENGTH) {
-				hasLengthExceed = true;
-				return false;
-			}
-			itemNameHash[name] = 1;
-			itemNames.push(name);
-		}
-	});
-	passed = !hasDuplicated && !hasSeparator && !hasLengthExceed;
-	passed && $(item).val(itemNames.join('\n'));
-	return {
-		passed: passed,
-		data: itemNames
-	};
-};
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = (/^https?:\/\//).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var $ = __webpack_require__(0);
-
-module.exports = function(item) {
-	var passed;
-	item = $(item)[0];
-	item.value = $.trim(item.value.toUpperCase());
-	if(!item.value) {
-		return true;
-	}
-	passed = !(/\W/).test(item.value);
-	return passed;
-};
-
-
-/***/ }),
-/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(0);
@@ -1330,50 +752,625 @@ YomFormUtil.addText2Input = function (textarea, text, rangeData) {
 };
 
 YomFormUtil.addValidator({
-	mandatory: __webpack_require__(10),
-	email: __webpack_require__(8),
-	emailList: __webpack_require__(7),
-	mobile: __webpack_require__(13),
-	name: __webpack_require__(14),
-	password: __webpack_require__(17),
-	maxLength: __webpack_require__(12),
-	maxByteLength: __webpack_require__(11),
-	url: __webpack_require__(19),
-	set: __webpack_require__(18),
-	number: __webpack_require__(2),
-	numberRange: __webpack_require__(16),
-	numberDigits: __webpack_require__(15),
-	integer: __webpack_require__(1),
-	integerRange: __webpack_require__(9),
-	datetime: __webpack_require__(4),
-	wordUpperCase: __webpack_require__(20),
-	domain: __webpack_require__(6),
-	domainList: __webpack_require__(5)
-});
-
-YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
-	mandatory: '必填项',
-	email: '无效的邮件地址',
-	emailList: '无效的邮件地址',
-	mobile: '无效的手机号码',
-	name: '不能包含分号',
-	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格',
-	maxLength: '输入长度超过限制，需要删除{{1}}个字',
-	maxByteLength: '输入长度超过限制，需要删除{{1}}个字',
-	url: '无效的URL',
-	set: '不能含有重复的值，单个值的最大长度是80，值不能包含“||”',
-	number: '必须输入一个数字',
-	numberRange: '必须输入{{0}}到{{1}}范围之间的数字',
-	numberDigits: '保留到小数点后{{0}}位',
-	integer: '必须输入一个整数',
-	integerRange: '必须输入{{0}}到{{1}}范围之间的整数',
-	datetime: '无效的日期时间格式',
-	wordUpperCase: '只能输入大写字母、数字或下划线',
-	domain: '无效的域名',
-	domainList: '无效的域名'
+	'mandatory': __webpack_require__(6),
+	'email': __webpack_require__(7),
+	'email-list': __webpack_require__(8),
+	'mobile': __webpack_require__(9),
+	'name': __webpack_require__(10),
+	'password': __webpack_require__(11),
+	'max-length': __webpack_require__(12),
+	'max-byte-length': __webpack_require__(13),
+	'url': __webpack_require__(14),
+	'set': __webpack_require__(15),
+	'number': __webpack_require__(2),
+	'number-range': __webpack_require__(16),
+	'number-digits': __webpack_require__(17),
+	'integer': __webpack_require__(3),
+	'integer-range': __webpack_require__(18),
+	'datetime': __webpack_require__(19),
+	'word-upper-case': __webpack_require__(20),
+	'domain': __webpack_require__(21),
+	'domain-list': __webpack_require__(22)
 });
 
 module.exports = YomFormUtil;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed = false;
+	var inputType, groupType;
+	item = $(item)[0];
+	switch(item.tagName) {
+		case 'INPUT':
+			inputType = item.type.toUpperCase()
+			if(inputType == 'CHECKBOX' || inputType == 'RADIO') {
+				passed = item.checked;
+			} else {
+				item.value = $.trim(item.value);
+				passed = !!item.value;
+			}
+			break;
+		case 'SELECT':
+		case 'TEXTAREA':
+			item.value = $.trim(item.value);
+			passed = !!item.value;
+			break;
+		default:
+			groupType = $(item).attr('data-validate-type');
+			if(groupType == 'checkbox' || groupType == 'radio') {
+				$('input[type="' + groupType + '"]', item).each(function(i, box) {
+					if(box.checked) {
+						passed = true;
+						return false;
+					}
+				});
+			} else if(groupType == 'input') {
+				$('input', item).each(function(i, box) {
+					if(!(/^button|submit|reset|image|checkbox|radio$/i).test(box.type) && $.trim(box.value)) {
+						passed = true;
+						return false;
+					}
+				});
+			}
+	}
+	return passed;
+};
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed, data;
+	item = $(item)[0];
+	item.value = item.value.toLowerCase()
+		.replace(/\s*\n\s*/g, '\n')
+		.replace(/,/g, ';')
+		.replace(/;*\n;*/g, '\n')
+		.replace(/(\s*;\s*)+/g, '; ')
+		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	data = item.value.split(/; |\n/);
+	$.each(data, function(i, val) {
+		passed = (/^[a-zA-Z0-9_.-]{1,63}@([a-zA-Z0-9_-]{1,63}\.)+[a-zA-Z0-9_-]{1,63}$/).test(val);
+		return passed;
+	});
+	return {
+		passed: passed,
+		data: data
+	};
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^(0|86|17951)?(13[0-9]|14[57]|15[012356789]|16[6]|17[0-9]|18[0-9]|19[0-9]|106[0-9]{2})[0-9]{8}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	item = $(item)[0];
+	var passed = item.value.indexOf(';') < 0;
+	return passed;
+};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	item = $(item)[0];
+	var len = item.value.length;
+	var passed = len >= 6 && len <= 16 && !(/\s/).test(item.value) && (/[a-z]/).test(item.value) && (/[A-Z]/).test(item.value) && (/[0-9]/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item, maxLen) {
+	item = $(item)[0];
+	var inputLen = item.value.length;
+	var passed = inputLen <= maxLen;
+	return {
+		passed: passed,
+		msgData: [maxLen, inputLen - maxLen]
+	};
+};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+function _getByteLength(str) {
+	return str.replace(/[^\x00-\xff]/g, 'xx').length;
+}
+
+module.exports = function(item, maxLen) {
+	item = $(item)[0];
+	var inputLen = _getByteLength(item.value);
+	var passed = inputLen <= maxLen;
+	return {
+		passed: passed,
+		msgData: [maxLen, inputLen - maxLen]
+	};
+};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toLowerCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^https?:\/\//).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var _SEPARATOR = '||';
+var _MAX_LENGTH = 80;
+
+module.exports = function(item) {
+	var itemNameHash = {};
+	var itemNames = [];
+	var hasDuplicated = false;
+	var hasSeparator = false;
+	var hasLengthExceed = false;
+	var passed = true;
+	$.each($(item).val().split('\n'), function(i, name) {
+		name = $.trim(name);
+		if(name) {
+			if(itemNameHash[name]) {
+				hasDuplicated = true;
+				return false;
+			}
+			if(name.indexOf(_SEPARATOR) >= 0) {
+				hasSeparator = true;
+				return false;
+			}
+			if(name.length > _MAX_LENGTH) {
+				hasLengthExceed = true;
+				return false;
+			}
+			itemNameHash[name] = 1;
+			itemNames.push(name);
+		}
+	});
+	passed = !hasDuplicated && !hasSeparator && !hasLengthExceed;
+	passed && $(item).val(itemNames.join('\n'));
+	return {
+		passed: passed,
+		data: itemNames
+	};
+};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+var util = __webpack_require__(4);
+var numberValidator = __webpack_require__(2);
+
+module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	range = range.split('~');
+	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;
+	var msgData = [util.formatDecimal(range[0], '0.' + new Array(digits).join('0')), util.formatDecimal(range[1], '0.' + new Array(digits).join('0'))];
+	if(!numberValidator({value: range[0]}).passed || !numberValidator({value: range[1]}).passed || !numberValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: msgData
+		};
+	}
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
+		return {
+			passed: false,
+			msgData: msgData
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: msgData
+	};
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var integerValidator = __webpack_require__(3);
+var numberValidator = __webpack_require__(2);
+
+module.exports = function(item, digits) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	val = +item.value;
+	var decimalPart = item.value.split('.')[1];
+	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
+		item.value = val;
+	}
+	decimalPart = item.value.split('.')[1];
+	if(decimalPart && decimalPart.length > digits) {
+		return {
+			passed: false,
+			msgData: [+digits]
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: [+digits]
+	};
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+var util = __webpack_require__(4);
+var integerValidator = __webpack_require__(3);
+
+module.exports = function(item, range) {
+	var val;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	range = range.split('~');
+	var msgData = [util.formatDecimal(range[0], '0'), util.formatDecimal(range[1], '0')];
+	if(!integerValidator({value: range[0]}).passed || !integerValidator({value: range[1]}).passed || !integerValidator(item).passed) {
+		return {
+			passed: false,
+			msgData: msgData
+		};
+	}
+	val = +item.value;
+	if(!(val >= +range[0] && val <= +range[1])) {
+		return {
+			passed: false,
+			msgData: msgData
+		};
+	}
+	return {
+		passed: true,
+		data: val,
+		msgData: msgData
+	};
+};
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+module.exports = function(item, format) {
+	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
+	item = $(item)[0];
+	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if(!item.value) {
+		return {
+			passed: true,
+			data: null
+		};
+	}
+	val = val.split(' ');
+	format = format.split(' ');
+	if(val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	dateVal = val[0];
+	timeVal = val[1];
+	dateFormat = format[0];
+	timeFormat = format[1];
+	val = dateVal.match(/\d+/g);
+	format = dateFormat.match(/[yMd]+/g);
+	if(!val || val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	year = +val[0];
+	month = +val[1];
+	date = +val[2];
+	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(!timeFormat) {
+		return {
+			passed: true,
+			data: new Date(year, month - 1, date)
+		};
+	}
+	val = timeVal.match(/\d+/g);
+	format = timeFormat.match(/[Hhms]+/g);
+	if(!val || val.length != format.length) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	hour = +val[0];
+	minute = +val[1];
+	second = +val[2];
+	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
+		return {
+			passed: false,
+			data: null
+		};
+	}
+	return {
+		passed: true,
+		data: new Date(year, month - 1, date, hour, minute, second)
+	};
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value.toUpperCase());
+	if(!item.value) {
+		return true;
+	}
+	passed = !(/\W/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed;
+	item = $(item)[0];
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(item.value);
+	return passed;
+};
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	var passed, data;
+	item = $(item)[0];
+	item.value = item.value.toLowerCase()
+		.replace(/\s*\n\s*/g, '\n')
+		.replace(/,/g, ';')
+		.replace(/;*\n;*/g, '\n')
+		.replace(/(\s*;\s*)+/mg, '; ')
+		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
+	item.value = $.trim(item.value);
+	if(!item.value) {
+		return true;
+	}
+	data = item.value.split(/; |\n/);
+	$.each(data, function(i, val) {
+		passed = (/^([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z0-9\-]{1,63}$/).test(val);
+		return passed;
+	});
+	return {
+		passed: passed,
+		data: data
+	};
+};
 
 
 /***/ })

@@ -1,13 +1,13 @@
 {
   "name": "yom-form-util",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "A form util.",
   "keywords": [
     "form util"
   ],
   "main": "dist/yom-form-util.js",
   "scripts": {
-    "build": "./node_modules/.bin/webpack"
+    "build": "npx webpack"
   },
   "homepage": "https://github.com/webyom/yom-form-util",
   "author": {
@@ -27,10 +27,11 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "dependencies": {
+  "peerDependencies": {
     "jquery": "^3.2.1"
   },
   "devDependencies": {
-    "webpack": "^2.3.3"
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   }
 }

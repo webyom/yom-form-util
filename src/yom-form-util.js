@@ -508,47 +508,25 @@ YomFormUtil.addText2Input = function (textarea, text, rangeData) {
 };
 
 YomFormUtil.addValidator({
-	mandatory: require('./validator-mandatory'),
-	email: require('./validator-email'),
-	emailList: require('./validator-email-list'),
-	mobile: require('./validator-mobile'),
-	name: require('./validator-name'),
-	password: require('./validator-password'),
-	maxLength: require('./validator-max-length'),
-	maxByteLength: require('./validator-max-byte-length'),
-	url: require('./validator-url'),
-	set: require('./validator-set'),
-	number: require('./validator-number'),
-	numberRange: require('./validator-number-range'),
-	numberDigits: require('./validator-number-digits'),
-	integer: require('./validator-integer'),
-	integerRange: require('./validator-integer-range'),
-	datetime: require('./validator-datetime'),
-	wordUpperCase: require('./validator-word-upper-case'),
-	domain: require('./validator-domain'),
-	domainList: require('./validator-domain-list')
-});
-
-YomFormUtil.setCommonMsg(window.YomFormUtilCommonMsg || {
-	mandatory: '必填项',
-	email: '无效的邮件地址',
-	emailList: '无效的邮件地址',
-	mobile: '无效的手机号码',
-	name: '不能包含分号',
-	password: '密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格',
-	maxLength: '输入长度超过限制，需要删除{{1}}个字',
-	maxByteLength: '输入长度超过限制，需要删除{{1}}个字',
-	url: '无效的URL',
-	set: '不能含有重复的值，单个值的最大长度是80，值不能包含“||”',
-	number: '必须输入一个数字',
-	numberRange: '必须输入{{0}}到{{1}}范围之间的数字',
-	numberDigits: '保留到小数点后{{0}}位',
-	integer: '必须输入一个整数',
-	integerRange: '必须输入{{0}}到{{1}}范围之间的整数',
-	datetime: '无效的日期时间格式',
-	wordUpperCase: '只能输入大写字母、数字或下划线',
-	domain: '无效的域名',
-	domainList: '无效的域名'
+	'mandatory': require('./validator-mandatory'),
+	'email': require('./validator-email'),
+	'email-list': require('./validator-email-list'),
+	'mobile': require('./validator-mobile'),
+	'name': require('./validator-name'),
+	'password': require('./validator-password'),
+	'max-length': require('./validator-max-length'),
+	'max-byte-length': require('./validator-max-byte-length'),
+	'url': require('./validator-url'),
+	'set': require('./validator-set'),
+	'number': require('./validator-number'),
+	'number-range': require('./validator-number-range'),
+	'number-digits': require('./validator-number-digits'),
+	'integer': require('./validator-integer'),
+	'integer-range': require('./validator-integer-range'),
+	'datetime': require('./validator-datetime'),
+	'word-upper-case': require('./validator-word-upper-case'),
+	'domain': require('./validator-domain'),
+	'domain-list': require('./validator-domain-list')
 });
 
 module.exports = YomFormUtil;
