@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -103,7 +103,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
 
-/***/ 23:
+/***/ 24:
 /***/ (function(module, exports, __webpack_require__) {
 
 var YomFormUtil = __webpack_require__(1);
@@ -126,6 +126,7 @@ YomFormUtil.setCommonMsg({
   "number-range": "The number value must be between {{0}} to {{1}}",
   "password": "The length of password must be between 6 and 16. The password must contain upper-case and lower-case alphabetic characters as well as numeric characters. It must not contain blank spaces.",
   "set": "Duplicate value is not allowed. The max length of a value is 80, and values cannot contain \"||\".",
+  "trim": "Spaces at the beginning and end are not allowed.",
   "url": "Invalid URL.",
   "word-upper-case": "Only upper-case letter, digit or underscore is allowed."
 });

@@ -5,12 +5,11 @@ var numberValidator = require('./validator-number');
 module.exports = function(item, range) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	range = range.split('~');
 	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;

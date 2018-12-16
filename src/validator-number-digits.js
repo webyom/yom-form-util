@@ -6,12 +6,11 @@ var numberValidator = require('./validator-number');
 module.exports = function(item, digits) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
 		return {

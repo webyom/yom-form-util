@@ -134,7 +134,7 @@ YomFormUtil.validateOne = function(item) {
 				passed = passed.passed;
 			}
 		} else {
-			var value = $.trim($(item).val());
+			var value = $(item).val();
 			if(value) {
 				validator = $(item).attr('data-' + type + '-regexp');
 				if(validator) {
@@ -526,7 +526,8 @@ YomFormUtil.addValidator({
 	'datetime': require('./validator-datetime'),
 	'word-upper-case': require('./validator-word-upper-case'),
 	'domain': require('./validator-domain'),
-	'domain-list': require('./validator-domain-list')
+	'domain-list': require('./validator-domain-list'),
+	'trim': require('./validator-trim')
 });
 
 module.exports = YomFormUtil;

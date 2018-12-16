@@ -3,7 +3,10 @@ var $ = require('jquery');
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	item.value = item.value.toLowerCase();
 	if(!item.value) {
 		return true;
 	}

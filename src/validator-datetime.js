@@ -3,9 +3,12 @@ var $ = require('jquery');
 var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 module.exports = function(item, format) {
-	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
+	var val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
 	item = $(item)[0];
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	val = item.value = item.value.replace(/(\s)+/g, '$1');
 	if(!item.value) {
 		return {
 			passed: true,
@@ -15,10 +18,7 @@ module.exports = function(item, format) {
 	val = val.split(' ');
 	format = format.split(' ');
 	if(val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	dateVal = val[0];
 	timeVal = val[1];
@@ -27,55 +27,31 @@ module.exports = function(item, format) {
 	val = dateVal.match(/\d+/g);
 	format = dateFormat.match(/[yMd]+/g);
 	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	year = +val[0];
 	month = +val[1];
 	date = +val[2];
 	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(!timeFormat) {
 		return {
@@ -86,67 +62,37 @@ module.exports = function(item, format) {
 	val = timeVal.match(/\d+/g);
 	format = timeFormat.match(/[Hhms]+/g);
 	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	hour = +val[0];
 	minute = +val[1];
 	second = +val[2];
 	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	return {
 		passed: true,

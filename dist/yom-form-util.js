@@ -110,18 +110,15 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || (/e|\.$/i).test(item.value)) {
-		return {
-			passed: false
-		};
+		return false;
 	}
 	var decimalPart = item.value.split('.')[1];
 	if(!decimalPart || (val + '').split('.')[0] + '.' + decimalPart != item.value) {
@@ -146,12 +143,11 @@ var MIN_SAFE_INTEGER = -9007199254740991;
 module.exports = function(item) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	val = +item.value;
 	if(isNaN(val) || !isFinite(val) || val > MAX_SAFE_INTEGER || MAX_SAFE_INTEGER < MIN_SAFE_INTEGER || (/e|\./i).test(item.value)) {
@@ -378,7 +374,7 @@ YomFormUtil.validateOne = function(item) {
 				passed = passed.passed;
 			}
 		} else {
-			var value = $.trim($(item).val());
+			var value = $(item).val();
 			if(value) {
 				validator = $(item).attr('data-' + type + '-regexp');
 				if(validator) {
@@ -770,7 +766,8 @@ YomFormUtil.addValidator({
 	'datetime': __webpack_require__(19),
 	'word-upper-case': __webpack_require__(20),
 	'domain': __webpack_require__(21),
-	'domain-list': __webpack_require__(22)
+	'domain-list': __webpack_require__(22),
+	'trim': __webpack_require__(23)
 });
 
 module.exports = YomFormUtil;
@@ -786,19 +783,20 @@ module.exports = function(item) {
 	var passed = false;
 	var inputType, groupType;
 	item = $(item)[0];
+	if((/^\s+$/).test(item.value)) {
+		return false;
+	}
 	switch(item.tagName) {
 		case 'INPUT':
 			inputType = item.type.toUpperCase()
 			if(inputType == 'CHECKBOX' || inputType == 'RADIO') {
 				passed = item.checked;
 			} else {
-				item.value = $.trim(item.value);
 				passed = !!item.value;
 			}
 			break;
 		case 'SELECT':
 		case 'TEXTAREA':
-			item.value = $.trim(item.value);
 			passed = !!item.value;
 			break;
 		default:
@@ -832,7 +830,10 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	item.value = item.value.toLowerCase();
 	if(!item.value) {
 		return true;
 	}
@@ -850,13 +851,15 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed, data;
 	item = $(item)[0];
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	item.value = item.value.toLowerCase()
 		.replace(/\s*\n\s*/g, '\n')
 		.replace(/,/g, ';')
 		.replace(/;*\n;*/g, '\n')
 		.replace(/(\s*;\s*)+/g, '; ')
 		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
 	if(!item.value) {
 		return true;
 	}
@@ -881,7 +884,9 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
 		return true;
 	}
@@ -977,7 +982,10 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value.toLowerCase());
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	item.value = item.value.toLowerCase();
 	if(!item.value) {
 		return true;
 	}
@@ -1041,12 +1049,11 @@ var numberValidator = __webpack_require__(2);
 module.exports = function(item, range) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	range = range.split('~');
 	var digits = Math.max((range[0].split('.')[1] || '').length, (range[1].split('.')[1] || '').length) + 1;
@@ -1084,12 +1091,11 @@ var numberValidator = __webpack_require__(2);
 module.exports = function(item, digits) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	if(!integerValidator({value: digits}).passed || !numberValidator(item).passed) {
 		return {
@@ -1128,12 +1134,11 @@ var integerValidator = __webpack_require__(3);
 module.exports = function(item, range) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	range = range.split('~');
 	var msgData = [util.formatDecimal(range[0], '0'), util.formatDecimal(range[1], '0')];
@@ -1167,9 +1172,12 @@ var $ = __webpack_require__(0);
 var _MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 module.exports = function(item, format) {
-	var tmp, val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
+	var val, dateVal, timeVal, dateFormat, timeFormat, year, month, hour, minute, second, date;
 	item = $(item)[0];
-	val = item.value = $.trim(item.value.replace(/(\s)+/g, '$1'));
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	val = item.value = item.value.replace(/(\s)+/g, '$1');
 	if(!item.value) {
 		return {
 			passed: true,
@@ -1179,10 +1187,7 @@ module.exports = function(item, format) {
 	val = val.split(' ');
 	format = format.split(' ');
 	if(val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	dateVal = val[0];
 	timeVal = val[1];
@@ -1191,55 +1196,31 @@ module.exports = function(item, format) {
 	val = dateVal.match(/\d+/g);
 	format = dateFormat.match(/[yMd]+/g);
 	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	year = +val[0];
 	month = +val[1];
 	date = +val[2];
 	if(val[1].length > 2 || val[2].length > 2 || month === 0 || date === 0 || month > 12 || date > _MONTH_DAYS[month]) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(month === 2 && !(year % 4 == 0 && year % 100 !=0 || year % 400==0) && date > 28) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'M' && month < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'MM' && month < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'd' && date < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'dd' && date < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(dateFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != dateVal) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(!timeFormat) {
 		return {
@@ -1250,67 +1231,37 @@ module.exports = function(item, format) {
 	val = timeVal.match(/\d+/g);
 	format = timeFormat.match(/[Hhms]+/g);
 	if(!val || val.length != format.length) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	hour = +val[0];
 	minute = +val[1];
 	second = +val[2];
 	if(val[0].length > 2 || val[1].length > 2 || val[2].length > 2 || hour > 24 || minute > 59 || second > 59) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'h' || format[0] == 'hh') && hour > 12) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'H' || format[0] == 'h') && hour < 10 && val[0].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if((format[0] == 'HH' || format[0] == 'hh') && hour < 10 && val[0].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'm' && minute < 10 && val[1].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[1] == 'mm' && minute < 10 && val[1].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 's' && second < 10 && val[2].charAt(0) == '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(format[2] == 'ss' && second < 10 && val[2].charAt(0) != '0') {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	if(timeFormat.replace(format[0], val[0]).replace(format[1], val[1]).replace(format[2], val[2]) != timeVal) {
-		return {
-			passed: false,
-			data: null
-		};
+		return false;
 	}
 	return {
 		passed: true,
@@ -1328,7 +1279,10 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value.toUpperCase());
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	item.value = item.value.toUpperCase();
 	if(!item.value) {
 		return true;
 	}
@@ -1346,7 +1300,9 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
 		return true;
 	}
@@ -1364,13 +1320,15 @@ var $ = __webpack_require__(0);
 module.exports = function(item) {
 	var passed, data;
 	item = $(item)[0];
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	item.value = item.value.toLowerCase()
 		.replace(/\s*\n\s*/g, '\n')
 		.replace(/,/g, ';')
 		.replace(/;*\n;*/g, '\n')
 		.replace(/(\s*;\s*)+/mg, '; ')
 		.replace(/^(;\s*)+|^\n+|(;\s*)+$|\n+$/g, '');
-	item.value = $.trim(item.value);
 	if(!item.value) {
 		return true;
 	}
@@ -1383,6 +1341,21 @@ module.exports = function(item) {
 		passed: passed,
 		data: data
 	};
+};
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(0);
+
+module.exports = function(item) {
+	item = $(item)[0];
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
+	return true;
 };
 
 

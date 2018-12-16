@@ -5,12 +5,11 @@ var integerValidator = require('./validator-integer');
 module.exports = function(item, range) {
 	var val;
 	item = $(item)[0];
-	item.value = $.trim(item.value);
+	if((/^\s+|\s+$/).test(item.value)) {
+		return false;
+	}
 	if(!item.value) {
-		return {
-			passed: true,
-			data: null
-		};
+		return true;
 	}
 	range = range.split('~');
 	var msgData = [util.formatDecimal(range[0], '0'), util.formatDecimal(range[1], '0')];

@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 26);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -103,7 +103,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
 
-/***/ 25:
+/***/ 26:
 /***/ (function(module, exports, __webpack_require__) {
 
 var YomFormUtil = __webpack_require__(1);
@@ -126,6 +126,7 @@ YomFormUtil.setCommonMsg({
   "number-range": "必须输入{{0}}到{{1}}范围之间的数字",
   "password": "密码长度在6~16之间，必须包含大写字母、小写字母和数字，不能包含空格",
   "set": "不能含有重复的值，单个值的最大长度是80，值不能包含“||”",
+  "trim": "内容的前后不能有空格",
   "url": "无效的URL",
   "word-upper-case": "只能输入大写字母、数字或下划线"
 });
