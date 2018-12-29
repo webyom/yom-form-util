@@ -26,7 +26,7 @@ module.exports = {
       commonjs2: 'yom-form-util',
       commonjs: 'yom-form-util',
       amd: 'yom-form-util',
-      root: 'YomFormUtil.default'
+      root: ['YomFormUtil', 'default']
     }
   },
   optimization: {

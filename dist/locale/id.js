@@ -6,7 +6,7 @@
 	else if(typeof exports === 'object')
 		exports["locale/id"] = factory(require("yom-form-util"));
 	else
-		root["YomFormUtil"] = root["YomFormUtil"] || {}, root["YomFormUtil"]["locale/id"] = factory(root["YomFormUtil.default"]);
+		root["YomFormUtil"] = root["YomFormUtil"] || {}, root["YomFormUtil"]["locale/id"] = factory(root["YomFormUtil"]["default"]);
 })(window, function(__WEBPACK_EXTERNAL_MODULE__1__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
