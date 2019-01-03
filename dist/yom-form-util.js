@@ -480,8 +480,18 @@ YomFormUtil.getData = function(container, opt) {
 					if(returnArray) {
 						res.push(item.checked ? item.value : emptyValue);
 					} else if (item.checked) {
-						if($(item).attr('data-value-type') == 'bool') {
-							res[item.name] = (item.value + '').toLowerCase() == 'false' ? false : true;
+						var valueType = $(item).attr('data-value-type');
+						if(valueType == 'bool') {
+							res[item.name] = String(item.value) == 'false' ? false : true;
+						} else if(valueType == 'number') {
+							var numVal = item.value;
+							if (numVal !== '') {
+								numVal = +item.value;
+								if (isNaN(numVal)) {
+									numVal = item.value;
+								}
+							}
+							res[item.name] = numVal === 0 ? numVal : (numVal || emptyValue);
 						} else {
 							res[item.name] = item.value || emptyValue;
 						}
