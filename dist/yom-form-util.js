@@ -333,7 +333,8 @@ YomFormUtil.dehighLight = function(item) {
 	YomFormUtil.highLight(item, '', '');
 };
 
-YomFormUtil.validateOne = function(item) {
+YomFormUtil.validateOne = function(item, opt) {
+	opt = opt || {};
 	var res = {
 		passed: true
 	};
@@ -394,7 +395,7 @@ YomFormUtil.validateOne = function(item) {
 			}
 			res = {
 				passed: false,
-				helped: YomFormUtil.highLight(item, msg),
+				helped: opt.highLight === false ? false : YomFormUtil.highLight(item, msg),
 				failType: type,
 				failMsg: msg
 			};
@@ -426,7 +427,7 @@ YomFormUtil.validate = function(container, opt) {
 		if($item.closest('.display-none, .hide, .hidden').length) {
 			return;
 		}
-		var oneRes = YomFormUtil.validateOne(item);
+		var oneRes = YomFormUtil.validateOne(item, opt);
 		var failItem
 		if(!oneRes.passed) {
 			res.passed = false;
