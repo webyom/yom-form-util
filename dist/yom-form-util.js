@@ -1361,8 +1361,12 @@ module.exports = function(item) {
 
 var $ = __webpack_require__(0);
 
-module.exports = function(item) {
+module.exports = function(item, type) {
 	item = $(item)[0];
+	if (type != 'warn') {
+		item.value = $.trim(item.value);
+		return true;
+	}
 	if((/^\s+|\s+$/).test(item.value)) {
 		return false;
 	}
